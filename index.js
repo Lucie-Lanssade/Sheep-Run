@@ -1,199 +1,34 @@
-//canvas creation
-//***************************************************
-const canvas = document.querySelector('canvas');
-const context = canvas.getContext('2d');
-canvas.width = 1024;
-canvas.height = 566;
-console.log(canvas.width);
+/*Imports*/
 
-//adds a gravity effect by updating the velocity by changing the speed of the falling element
-const gravity = 1.5;
-//************************************************************************
+import Player from './Classes/Player.js';
+import Ennemy from './Classes/Ennemy.js';
+import Platform from './Classes/Platform.js';
+import MovingPlatform from './Classes/MovingPlatform.js';
+import DecorativeObject from './Classes/DecorativeObjects.js';
 
-const sheep = new Image();
-sheep.src = './assets/sheep.png';
+import { canvas, context } from './context.js';
 
-//Classes
-//*************************************************************************
+import {
+  platform1,
+  platform2,
+  platformSmall,
+  background,
+  moutains,
+  winning,
+  loosing,
+} from './images.js';
 
-class Player {
-  constructor() {
-    this.speed = 10;
-    this.position = {
-      x: 100,
-      y: 100,
-    };
-    this.width = 68;
-    this.height = 58;
-    this.image = sheep;
-    this.frames = 0;
-    this.velocity = {
-      x: 0,
-      y: 1,
-    };
-  }
-  draw() {
-    context.drawImage(
-      this.image,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
-  }
-  //udpates the player's position
-  update() {
-    this.draw();
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-    // adds gravity and stops the element from going outside of the canvas
-    if (this.position.y + this.height + this.velocity.y <= canvas.height)
-      this.velocity.y += gravity;
-  }
-}
-
-const wolf = new Image();
-wolf.src = './assets/wolf.png';
-
-class Ennemy {
-  constructor({ position, velocity, distance = { limit: 50, traveled: 0 } }) {
-    this.position = { x: position.x, y: position.y };
-    this.velocity = { x: velocity.x, y: velocity.y };
-    this.image = wolf;
-    this.width = 50;
-    this.height = 50;
-    this.distance = distance;
-  }
-  draw() {
-    context.drawImage(
-      this.image,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
-  }
-
-  update() {
-    this.draw();
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-
-    //gravity
-    if (this.position.y + this.height + this.velocity.y <= canvas.height)
-      this.velocity.y += gravity;
-
-    //allows the ennemy to walk back and forth
-    this.distance.traveled += Math.abs(this.velocity.x);
-    if (this.distance.traveled > this.distance.limit) {
-      this.distance.traveled = 0;
-      this.velocity.x = -this.velocity.x;
-    }
-    console.log(this.distance.traveled);
-  }
-}
-
-//Platforms with player interaction (collision detection)
-class Platform {
-  constructor({ x, y, image }) {
-    this.position = { x: x, y: y };
-    this.image = image;
-    this.width = image.width;
-    this.height = image.height;
-  }
-  draw() {
-    context.drawImage(this.image, this.position.x, this.position.y);
-  }
-}
-
-class MovingPlatform {
-  constructor({ position, velocity }) {
-    this.position = { x: position.x, y: position.y };
-    this.velocity = { x: velocity.x, y: velocity.y };
-    this.image = movingPlat;
-    this.width = 150;
-    this.height = 60;
-    this.distance = { limit: 100, traveled: 0 };
-  }
-  draw() {
-    context.drawImage(
-      this.image,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
-  }
-
-  update() {
-    this.draw();
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-
-    //allows the platform to move back and forth
-    this.distance.traveled += Math.abs(this.velocity.x);
-    if (this.distance.traveled > this.distance.limit) {
-      this.distance.traveled = 0;
-      this.velocity.x = -this.velocity.x;
-    }
-  }
-}
-
-//Background and moutains whithout user interaction (collision detection)
-class DecorativeObject {
-  constructor({ x, y, image }) {
-    this.position = { x: x, y: y };
-    this.image = image;
-    this.width = image.width;
-    this.height = image.height;
-  }
-  draw() {
-    context.drawImage(this.image, this.position.x, this.position.y);
-  }
-}
-
+// Object initializations
 //*******************************************************************************
 
-// Objects creation
-//*******************************************************************************
-
-//creates the player with its class characteristics
-let player = new Player();
-
-//contains ennemies with their class characteristics
+let player;
 let ennemies = [];
-
-//contains moving platforms with their class characteristics
 let movingPlatforms = [];
-
-//Retrieves images in the assets folder
-let platform1 = new Image();
-platform1.src = './assets/Platform-1.png';
-
-let platform2 = new Image();
-platform2.src = './assets/Platform-2.png';
-
-let platformSmall = new Image();
-platformSmall.src = './assets/platform-small.png';
-
-let background = new Image();
-background.src = './assets/background.png';
-
-let moutains = new Image();
-moutains.src = './assets/moutains.png';
-
-let movingPlat = new Image();
-movingPlat.src = './assets/moving-platform.png';
-
-//Creates new platforms with specific values
 let platforms = [];
-
-//Initialization of the decorative objects array
 let decorativeObjects = [];
 
 //Object keys pressed property returns true or false wether a key is pressed or not
 let keys = { right: { pressed: false }, left: { pressed: false } };
-
 let scrollEnd = 0;
 
 //******************************************************************************
@@ -223,39 +58,48 @@ function ennemiesTopCollisionDetect({ object1, object2 }) {
   );
 }
 
-//Resets the game with all the elements (player,platform & decorative objects)
-function resetGame() {
+//Creates the game with all the elements (player,platform & decorative objects)
+function createGame() {
   //creates the player with its class characteristics
   player = new Player();
 
   //Generates new ennemies
   ennemies = [
     new Ennemy({
-      position: { x: 600, y: 420 },
+      position: { x: 900, y: 420 },
       velocity: { x: -1, y: 0 },
-      distance: { limit: 600, traveled: 0 },
+      distance: { limit: 800, traveled: 0 },
     }),
-    new Ennemy({ position: { x: 1400, y: 420 }, velocity: { x: -1, y: 0 } }),
+    new Ennemy({
+      position: { x: 3106, y: 220 },
+      velocity: { x: -1, y: 0 },
+      distance: { limit: 145, traveled: 0 },
+    }),
+
+    new Ennemy({
+      position: { x: 4270, y: 420 },
+      velocity: { x: -1, y: 0 },
+      distance: { limit: 145, traveled: 0 },
+    }),
+
+    new Ennemy({
+      position: { x: 5140, y: 420 },
+      velocity: { x: -1, y: 0 },
+      distance: { limit: 145, traveled: 0 },
+    }),
+
+    new Ennemy({
+      position: { x: 7100, y: 100 },
+      velocity: { x: -1, y: 0 },
+      distance: { limit: 90, traveled: 0 },
+    }),
+
+    new Ennemy({
+      position: { x: 7265, y: 100 },
+      velocity: { x: -1, y: 0 },
+      distance: { limit: 90, traveled: 0 },
+    }),
   ];
-
-  // creates the images
-  platform1 = new Image();
-  platform1.src = './assets/Platform-1.png';
-
-  platform2 = new Image();
-  platform2.src = './assets/Platform-2.png';
-
-  platformSmall = new Image();
-  platformSmall.src = './assets/platform-small.png';
-
-  movingPlat = new Image();
-  movingPlat.src = './assets/moving-platform.png';
-
-  background = new Image();
-  background.src = './assets/background.png';
-
-  moutains = new Image();
-  moutains.src = './assets/moutains.png';
 
   platforms = [
     new Platform({
@@ -283,6 +127,24 @@ function resetGame() {
     }),
 
     new Platform({
+      x: 7120,
+      y: 340,
+      image: platform2,
+    }),
+
+    new Platform({
+      x: 9000,
+      y: 340,
+      image: platform2,
+    }),
+
+    new Platform({
+      x: 9290,
+      y: 340,
+      image: platform2,
+    }),
+
+    new Platform({
       x: 2960,
       y: 330,
       image: platformSmall,
@@ -291,6 +153,12 @@ function resetGame() {
     new Platform({
       x: 2960 + platformSmall.width,
       y: 270,
+      image: platformSmall,
+    }),
+
+    new Platform({
+      x: 8200,
+      y: 350,
       image: platformSmall,
     }),
 
@@ -305,12 +173,21 @@ function resetGame() {
     new Platform({ x: 3980, y: 470, image: platform1 }),
     new Platform({ x: 4560, y: 470, image: platform1 }),
     new Platform({ x: 5140, y: 470, image: platform1 }),
+    new Platform({ x: 6795, y: 470, image: platform1 }),
+    new Platform({ x: 7375, y: 470, image: platform1 }),
+    new Platform({ x: 8700, y: 470, image: platform1 }),
+    new Platform({ x: 9280, y: 470, image: platform1 }),
   ];
 
   movingPlatforms = [
     new MovingPlatform({
       position: { x: 5950, y: 350 },
-      velocity: { x: -1, y: 0 },
+      velocity: { x: -0.5, y: 0 },
+    }),
+
+    new MovingPlatform({
+      position: { x: 6290, y: 300 },
+      velocity: { x: -0.5, y: 0 },
     }),
   ];
 
@@ -353,22 +230,29 @@ function animation() {
   // Ennemies position update
   ennemies.forEach((ennemy, index) => {
     ennemy.update();
+    if (player.justGotHit) return;
     if (ennemiesTopCollisionDetect({ object1: player, object2: ennemy })) {
-      console.log('ennemy dead');
       player.velocity.y -= 30;
+      player.points += 5;
       setTimeout(() => {
         ennemies.splice(index, 1);
       }, 0);
+      //   console.log(player.points);
     } else if (
       player.position.x + player.width >= ennemy.position.x &&
       player.position.y + player.height >= ennemy.position.y &&
       player.position.x <= ennemy.position.x + ennemy.width
     ) {
-      resetGame();
+      player.health -= 5;
+      player.justGotHit = true;
+      setTimeout(() => {
+        player.justGotHit = false;
+      }, 1000);
     }
   });
   //Player position update
   player.update();
+  console.log(player.health);
 
   //moves the player left and right and blocks the player before 100 and after 500
   if (keys.right.pressed && player.position.x < 400) {
@@ -434,23 +318,19 @@ function animation() {
     });
   });
 
-  //   player.position.y + player.height <= platform.position.y &&
-  //   player.position.y + player.height + player.velocity.y >=
-  //     platform.position.y &&
-  //   player.position.x + player.width >= platform.position.x &&
-  //   player.position.x <= platform.position.x + platform.width
-
   //Initialization of win scenario
-  if (scrollEnd > platform1.width * 5 + 600) {
-    console.log('you win');
+  if (scrollEnd > 9230) {
+    context.clearRect(0, 0, 1024, 566);
+    context.drawImage(winning, 0, 0);
   }
 
   //Initialization of loose scenario
-  if (player.position.y > canvas.height) {
-    resetGame();
+  if (player.position.y > canvas.height || player.health === 0) {
+    context.clearRect(0, 0, 1024, 566);
+    context.drawImage(loosing, 0, 0);
   }
 }
-resetGame();
+createGame();
 animation();
 //************************************************************************
 

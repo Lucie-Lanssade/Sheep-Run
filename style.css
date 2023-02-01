@@ -1,13 +1,75 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;800&display=swap');
+
+
+* {
+    font-family: 'Noto Sans', sans-serif;
     margin: 0;
-    background-color: cadetblue
+    padding: 0;
+    box-sizing: border-box;
 }
+
+body {
+
+    background-image: url('./assets/vecteezy_flat-design-mountains-landscape-background-illustration_14763069.jpg');
+    background-size: cover;
+}
+
+.title {
+    margin-top: 2rem;
+    color: #749470;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title>img {
+    width: 1000px;
+    margin-bottom: 1rem;
+}
+
+.title>p {
+    margin-top: 2.5rem;
+    color: black;
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+
+.rules {
+    color: white;
+    font-weight: 600;
+    width: 30rem;
+    background-color: #64bce9;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 2rem;
+    border-radius: 2%;
+}
+
 
 
 .canvas {
     display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
     align-items: center;
-    justify-content: center;
     height: 100vh;
-    margin: 3rem
+    margin: 1rem 3rem 0 3rem
+}
+
+canvas {
+    margin-left: 2rem;
+    border-radius: 3%;
+}
+
+
+#start-btn {
+    font-size: 2rem;
+    color: white;
+    font-weight: 800;
+    background-color: #64bce9;
+    border: none;
+    padding: 2rem 6rem 2rem 6rem
 }

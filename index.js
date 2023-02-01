@@ -173,6 +173,9 @@ platform1.src = './assets/Platform-1.png';
 let platform2 = new Image();
 platform2.src = './assets/Platform-2.png';
 
+let platformSmall = new Image();
+platformSmall.src = './assets/platform-small.png';
+
 let background = new Image();
 background.src = './assets/background.png';
 
@@ -209,17 +212,6 @@ function platformCollisionDetect({ object, platform }) {
   );
 }
 
-//Detects collision for player on moving platforms
-// function movingPlatformCollisionDetect({ player, movingPlatform }) {
-//   return (
-//     player.position.y + player.height <= movingPlatform.position.y &&
-//     player.position.y + player.height + player.velocity.y >=
-//       movingPlatform.position.y &&
-//     player.position.x + player.width >= movingPlatform.position.x &&
-//     player.position.x <= movingPlatform.position.x + movingPlatform.width
-//   );
-// }
-
 //Detects collision between player and ennemies
 function ennemiesTopCollisionDetect({ object1, object2 }) {
   return (
@@ -253,6 +245,9 @@ function resetGame() {
   platform2 = new Image();
   platform2.src = './assets/Platform-2.png';
 
+  platformSmall = new Image();
+  platformSmall.src = './assets/platform-small.png';
+
   movingPlat = new Image();
   movingPlat.src = './assets/moving-platform.png';
 
@@ -264,29 +259,57 @@ function resetGame() {
 
   platforms = [
     new Platform({
-      x: platform1.width * 4 + 300 - 2 + platform1.width - platform2.width,
+      x: 1430,
       y: 360,
       image: platform2,
     }),
+
+    new Platform({
+      x: platform1.width * 3 + 300 - 6,
+      y: 340,
+      image: platform2,
+    }),
+
+    new Platform({
+      x: 5004,
+      y: 340,
+      image: platform2,
+    }),
+
+    new Platform({
+      x: 5160,
+      y: 400,
+      image: platform2,
+    }),
+
+    new Platform({
+      x: 2960,
+      y: 330,
+      image: platformSmall,
+    }),
+
+    new Platform({
+      x: 2960 + platformSmall.width,
+      y: 270,
+      image: platformSmall,
+    }),
+
     new Platform({ x: 0, y: 470, image: platform1 }),
     new Platform({ x: platform1.width - 2, y: 470, image: platform1 }),
-    new Platform({ x: platform1.width * 2 + 100, y: 470, image: platform1 }),
-    new Platform({ x: platform1.width * 3 + 300, y: 470, image: platform1 }),
+    new Platform({ x: platform1.width * 2 - 4, y: 470, image: platform1 }),
     new Platform({
-      x: platform1.width * 4 + 300 - 2,
+      x: platform1.width * 3 - 6 + 520,
       y: 470,
       image: platform1,
     }),
-    new Platform({ x: platform1.width * 5 + 700, y: 470, image: platform1 }),
-    new Platform({ x: platform1.width * 6, y: 470, image: platform1 }),
-    new Platform({ x: platform1.width * 6 + 400, y: 470, image: platform1 }),
-    new Platform({ x: platform1.width * 7, y: 470, image: platform1 }),
-    new Platform({ x: platform1.width * 7 + 1000, y: 470, image: platform1 }),
+    new Platform({ x: 3980, y: 470, image: platform1 }),
+    new Platform({ x: 4560, y: 470, image: platform1 }),
+    new Platform({ x: 5140, y: 470, image: platform1 }),
   ];
 
   movingPlatforms = [
     new MovingPlatform({
-      position: { x: 800, y: 350 },
+      position: { x: 5950, y: 350 },
       velocity: { x: -1, y: 0 },
     }),
   ];
@@ -320,6 +343,11 @@ function animation() {
   // Draws the platforms
   movingPlatforms.forEach((movingPlatform) => {
     movingPlatform.update();
+    if (
+      ennemiesTopCollisionDetect({ object1: player, object2: movingPlatform })
+    ) {
+      player.velocity.y = 0;
+    }
   });
 
   // Ennemies position update
@@ -387,7 +415,7 @@ function animation() {
 
       movingPlatforms.forEach((movingPlatform) => {
         movingPlatform.position.x += player.speed;
-        if (platformCollisionDetect({ object: player, movingPlatform })) {
+        if (movingPlatformCollisionDetect({ object: player, movingPlatform })) {
           player.velocity.y = 0;
         }
       });

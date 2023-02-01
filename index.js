@@ -26,6 +26,7 @@ let ennemies = [];
 let movingPlatforms = [];
 let platforms = [];
 let decorativeObjects = [];
+let gameHasStarted = false;
 
 //Object keys pressed property returns true or false wether a key is pressed or not
 let keys = { right: { pressed: false }, left: { pressed: false } };
@@ -252,7 +253,6 @@ function animation() {
   });
   //Player position update
   player.update();
-  console.log(player.health);
 
   //moves the player left and right and blocks the player before 100 and after 500
   if (keys.right.pressed && player.position.x < 400) {
@@ -318,6 +318,13 @@ function animation() {
     });
   });
 
+  const lives = document.querySelector('.counter #lives');
+
+  lives.innerHTML = player.health;
+
+  const score = document.querySelector('.counter #score');
+  score.innerHTML = player.points;
+
   //Initialization of win scenario
   if (scrollEnd > 9230) {
     context.clearRect(0, 0, 1024, 566);
@@ -330,8 +337,14 @@ function animation() {
     context.drawImage(loosing, 0, 0);
   }
 }
-createGame();
-animation();
+
+const startButton = document.querySelector('#start-btn');
+startButton.addEventListener('click', (event) => {
+  gameHasStarted = true;
+  createGame();
+  animation();
+});
+
 //************************************************************************
 
 // Controls
@@ -346,7 +359,7 @@ window.addEventListener('keydown', (event) => {
       keys.right.pressed = true;
       break;
     case 'ArrowUp':
-      player.velocity.y -= 25;
+      player.velocity.y -= 15;
       break;
     case 'ArrowDown':
       break;

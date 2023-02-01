@@ -38,5 +38,9 @@ export default class Player {
     // adds gravity and stops the element from going outside of the canvas
     if (this.position.y + this.height + this.velocity.y <= canvas.height)
       this.velocity.y += gravity;
+
+    if (this.position.y < 0) {
+      return (this.position.y *= -1);
+    }
   }
 }

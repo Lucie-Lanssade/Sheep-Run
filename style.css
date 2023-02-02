@@ -73,20 +73,32 @@ canvas {
     border-radius: 3%;
 }
 
-
-
 .counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    text-align: right;
+    width: 300px;
     font-size: 2rem;
     color: #4f664c;
     font-weight: 800;
     border: none;
     padding: 2rem 3rem 2rem 3rem;
-    position: absolute
 }
 
-.counter h2 {
-    color: #364534;
+
+.gameboard {
+    position: relative
 }
+
+.active {
+    display: block
+}
+
+
+
 
 #start-btn {
     color: #749470;

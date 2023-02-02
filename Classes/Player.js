@@ -4,7 +4,7 @@ sheep.src = './assets/sheep.png';
 
 export default class Player {
   constructor() {
-    this.health = 15;
+    this.health = 3;
     this.points = 0;
     this.speed = 10;
     this.position = {

@@ -7,9 +7,11 @@ export let moutains = new Image();
 
 export const winning = new Image();
 export const loosing = new Image();
+export const curtain = new Image();
 
 winning.src = './assets/winning.png';
 loosing.src = './assets/loosing.png';
+curtain.src = './assets/curtain.png';
 
 platform1.src = './assets/Platform-1.png';
 platform2.src = './assets/Platform-2.png';

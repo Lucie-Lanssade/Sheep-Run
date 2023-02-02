@@ -5,7 +5,7 @@ wolf.src = './assets/wolf.png';
 
 export default class Ennemy {
   constructor({ position, velocity, distance = { limit: 50, traveled: 0 } }) {
-    this.damage = 5;
+    this.damage = 1;
     this.position = { x: position.x, y: position.y };
     this.velocity = { x: velocity.x, y: velocity.y };
     this.image = wolf;

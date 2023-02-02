@@ -16,9 +16,10 @@ import {
   moutains,
   winning,
   loosing,
+  curtain,
 } from './images.js';
 
-// Object initializations
+// Initializations
 //*******************************************************************************
 
 let player;
@@ -27,6 +28,10 @@ let movingPlatforms = [];
 let platforms = [];
 let decorativeObjects = [];
 let gameHasStarted = false;
+let animationId = null;
+const counterContainer = document.querySelector('.counter');
+const lives = document.querySelector('.counter #lives');
+const score = document.querySelector('.counter #score');
 
 //Object keys pressed property returns true or false wether a key is pressed or not
 let keys = { right: { pressed: false }, left: { pressed: false } };
@@ -36,6 +41,15 @@ let scrollEnd = 0;
 
 //Game logic
 //******************************************************************************
+
+curtain.addEventListener('load', () => {
+  if (!gameHasStarted) {
+    counterContainer.classList.remove('active');
+  }
+
+  context.clearRect(0, 0, 1024, 566);
+  context.drawImage(curtain, 0, 0);
+});
 
 //Detects collision for player and ennemies on platforms
 function platformCollisionDetect({ object, platform }) {
@@ -61,6 +75,8 @@ function ennemiesTopCollisionDetect({ object1, object2 }) {
 
 //Creates the game with all the elements (player,platform & decorative objects)
 function createGame() {
+  gameHasStarted = true;
+
   //creates the player with its class characteristics
   player = new Player();
 
@@ -203,7 +219,7 @@ function createGame() {
 //renders all the animation
 function animation() {
   //screen refresh
-  window.requestAnimationFrame(animation);
+  animationId = requestAnimationFrame(animation);
   //clears the canvas to keep the element's shape.
   context.fillStyle = 'white';
   context.fillRect(0, 0, canvas.width, canvas.height);
@@ -244,7 +260,7 @@ function animation() {
       player.position.y + player.height >= ennemy.position.y &&
       player.position.x <= ennemy.position.x + ennemy.width
     ) {
-      player.health -= 5;
+      player.health -= 1;
       player.justGotHit = true;
       setTimeout(() => {
         player.justGotHit = false;
@@ -299,7 +315,7 @@ function animation() {
 
       movingPlatforms.forEach((movingPlatform) => {
         movingPlatform.position.x += player.speed;
-        if (movingPlatformCollisionDetect({ object: player, movingPlatform })) {
+        if (ennemiesTopCollisionDetect({ object: player, movingPlatform })) {
           player.velocity.y = 0;
         }
       });
@@ -318,29 +334,31 @@ function animation() {
     });
   });
 
-  const lives = document.querySelector('.counter #lives');
-
   lives.innerHTML = player.health;
 
-  const score = document.querySelector('.counter #score');
   score.innerHTML = player.points;
 
   //Initialization of win scenario
   if (scrollEnd > 9230) {
+    counterContainer.classList.remove('active');
     context.clearRect(0, 0, 1024, 566);
     context.drawImage(winning, 0, 0);
   }
 
   //Initialization of loose scenario
   if (player.position.y > canvas.height || player.health === 0) {
+    counterContainer.classList.remove('active');
     context.clearRect(0, 0, 1024, 566);
     context.drawImage(loosing, 0, 0);
+    cancelAnimationFrame(animationId);
   }
 }
 
 const startButton = document.querySelector('#start-btn');
-startButton.addEventListener('click', (event) => {
-  gameHasStarted = true;
+startButton.addEventListener('click', () => {
+  cancelAnimationFrame(animationId);
+  counterContainer.classList.add('active');
+
   createGame();
   animation();
 });

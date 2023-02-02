@@ -28,6 +28,11 @@ body {
     gap: 10px;
 }
 
+.text {
+    padding-top: 2rem;
+}
+
+
 .title>img {
     width: 700px;
     margin-bottom: 1rem;
@@ -40,11 +45,13 @@ body {
     font-weight: 800;
 }
 
-.rules>h3 {
+.rules h3 {
     font-size: 2rem;
+
 }
 
 .rules {
+    font-size: 1.1rem;
     color: white;
     font-weight: 600;
     background-color: #4f96bad9;
@@ -52,7 +59,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 40px;
-    padding: 4rem;
+    padding: 6rem 4rem 6rem 4rem;
     border-radius: 12px;
 }
 
@@ -71,16 +78,33 @@ div.canvas {
 
 canvas {
     border-radius: 3%;
+    border: 20px white solid;
 }
+
+
+.assets {
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 5rem
+}
+
+.assets img {
+    width: 40%;
+    height: auto
+}
+
 
 .counter {
     position: absolute;
     top: 0;
     right: 0;
+
     display: none;
-    flex-direction: column;
-    text-align: right;
-    width: 300px;
+    flex-direction: row;
+    text-align: left;
+    width: 350px;
     font-size: 2rem;
     color: #4f664c;
     font-weight: 800;
@@ -105,7 +129,10 @@ canvas {
     font-weight: 800;
     font-size: 1.7rem;
     border: none;
-    padding: 2rem 2.5rem;
-    border-radius: 8px;
-    max-width: 200px;
+    padding: 1rem 2rem;
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    box-shadow: 6px 9px 0px 0px rgba(116, 148, 112, 0.78);
+
 }

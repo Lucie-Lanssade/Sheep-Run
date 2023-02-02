@@ -8,6 +8,8 @@ export let moutains = new Image();
 export const winning = new Image();
 export const loosing = new Image();
 export const curtain = new Image();
+export const sheepSound = new Audio();
+sheepSound.src = './assets/S5Q6BFU-sheep-baa.mp3';
 
 winning.src = './assets/winning.png';
 loosing.src = './assets/loosing.png';

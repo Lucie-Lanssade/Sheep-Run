@@ -17,6 +17,7 @@ import {
   winning,
   loosing,
   curtain,
+  sheepSound,
 } from './images.js';
 
 // Initializations
@@ -64,6 +65,7 @@ function platformCollisionDetect({ object, platform }) {
 
 //Detects collision between player and ennemies
 function ennemiesTopCollisionDetect({ object1, object2 }) {
+  //   console.log(object1, object2);
   return (
     object1.position.y + object1.height <= object2.position.y &&
     object1.position.y + object1.height + object1.velocity.y >=
@@ -315,7 +317,12 @@ function animation() {
 
       movingPlatforms.forEach((movingPlatform) => {
         movingPlatform.position.x += player.speed;
-        if (ennemiesTopCollisionDetect({ object: player, movingPlatform })) {
+        if (
+          ennemiesTopCollisionDetect({
+            object1: player,
+            object2: movingPlatform,
+          })
+        ) {
           player.velocity.y = 0;
         }
       });
@@ -326,7 +333,10 @@ function animation() {
   platforms.forEach((platform) => {
     if (platformCollisionDetect({ object: player, platform })) {
       player.velocity.y = 0;
+    } else {
+      //   console.log('Fallliiiing');
     }
+
     ennemies.forEach((ennemy) => {
       if (platformCollisionDetect({ object: ennemy, platform })) {
         ennemy.velocity.y = 0;
@@ -334,7 +344,15 @@ function animation() {
     });
   });
 
-  lives.innerHTML = player.health;
+  if (player.health === 3) {
+    lives.innerHTML = '💗💗💗';
+  } else if (player.health === 2) {
+    lives.innerHTML = '💗💗';
+  } else if (player.health === 1) {
+    lives.innerHTML = '💗';
+  }
+
+  //   lives.innerHTML = player.health;
 
   score.innerHTML = player.points;
 
@@ -378,6 +396,7 @@ window.addEventListener('keydown', (event) => {
       break;
     case 'ArrowUp':
       player.velocity.y -= 15;
+      sheepSound.play();
       break;
     case 'ArrowDown':
       break;

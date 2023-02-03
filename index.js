@@ -333,8 +333,6 @@ function animation() {
   platforms.forEach((platform) => {
     if (platformCollisionDetect({ object: player, platform })) {
       player.velocity.y = 0;
-    } else {
-      //   console.log('Fallliiiing');
     }
 
     ennemies.forEach((ennemy) => {
@@ -344,6 +342,7 @@ function animation() {
     });
   });
 
+  // Displays number of lives on counter
   if (player.health === 3) {
     lives.innerHTML = '💗💗💗';
   } else if (player.health === 2) {
@@ -364,7 +363,10 @@ function animation() {
   }
 
   //Initialization of loose scenario
-  if (player.position.y > canvas.height || player.health === 0) {
+  if (
+    (scrollEnd < 9230 && player.position.y > canvas.height) ||
+    (scrollEnd < 9230 && player.health === 0)
+  ) {
     counterContainer.classList.remove('active');
     context.clearRect(0, 0, 1024, 566);
     context.drawImage(loosing, 0, 0);
@@ -395,11 +397,14 @@ window.addEventListener('keydown', (event) => {
       keys.right.pressed = true;
       break;
     case 'ArrowUp':
-      player.velocity.y -= 15;
+      player.velocity.y -= 50;
       sheepSound.play();
+
       break;
     case 'ArrowDown':
       break;
+    case 'Spacebar':
+      event.preventDefault();
   }
 });
 
@@ -413,7 +418,8 @@ window.addEventListener('keyup', (event) => {
       keys.right.pressed = false;
       break;
     case 'ArrowUp':
-      player.velocity.y -= 10;
+      player.velocity.y = 0;
+
       break;
     case 'ArrowDown':
       break;

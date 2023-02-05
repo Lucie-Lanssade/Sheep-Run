@@ -2,8 +2,8 @@
 # Sheepy Run
 
 
-Sheepy Run is **the first project **I had the chance to develop during the 9 weeks IronHack bootcamp.
-The goal was to **build a working video game in 4 days **using what we had learned during **the first 2 weeks of the bootcamp.** I chose a side-scrolling game and decided to use Canvas to expand my knowledge of animation and understand how games likes Super Mario are built. 
+Sheepy Run is the first project I had the chance to develop during the 9 weeks IronHack bootcamp.
+The goal was to build a working video game in 4 days using what we had learned during the first 2 weeks of the bootcamp. I chose a side-scrolling game and decided to use Canvas to expand my knowledge of animation and understand how games likes Super Mario are built. 
 
 ## Tech Stack
 - Javascript
